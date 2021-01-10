@@ -4,8 +4,6 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -22,27 +20,23 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const Navbar: React.FC = () => {
+const Desktop:React.FC = ()=>{
     const classes = useStyles();
-
-    return (
+    return(
         <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar>
-                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                        <MenuIcon />
-                    </IconButton>
                     <Typography variant="h6" className={classes.title}>
                         Photos
                     </Typography>
                     <div>
-                        <Button component={Link} to="/">
+                        <Button component={Link} to="/" color="inherit">
                             Home
                         </Button>
-                        <Button component={Link} to="/signin">
+                        <Button component={Link} to="/signin" color="inherit">
                             Ingresar
                         </Button>
-                        <Button component={Link} to="/signup">
+                        <Button component={Link} to="/signup" color="inherit">
                             Registrar
                         </Button>
                     </div>
@@ -51,4 +45,5 @@ const Navbar: React.FC = () => {
         </div>
     );
 }
-export default Navbar;
+
+export default Desktop;

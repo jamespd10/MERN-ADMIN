@@ -4,7 +4,7 @@ import {
     Switch,
     Route,
 } from "react-router-dom";
-import Navbar from './components/navbar';
+import Navbar from './navbar';
 import { routes } from './routes';
 
 const Routes: React.FC = () => {

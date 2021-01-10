@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles({
     sliderWidth: {
-        width: '50%',
+        width: '100%',
     },
 });
 
@@ -19,21 +19,22 @@ const Home: React.FC = (props: any) => {
     return (
         <Container maxWidth="md">
             <h1>Home</h1>
-            <Grid container spacing={2}>
-                <Grid item xs>
-                    <Slider
-                        className={classes.sliderWidth}
-                        defaultValue={100}
-                        aria-labelledby="discrete-slider"
-                        valueLabelDisplay="auto"
-                        step={1}
-                        marks
-                        min={50}
-                        max={100}
-                        onChange={(e, val) => setWidth(val as number)}
-                    />
+            <div className={classes.sliderWidth}>
+                <Grid container spacing={3}>
+                    <Grid item xs>
+                        <Slider
+                            defaultValue={100}
+                            aria-labelledby="discrete-slider"
+                            valueLabelDisplay="auto"
+                            step={1}
+                            marks
+                            min={50}
+                            max={100}
+                            onChange={(e, val) => setWidth(val as number)}
+                        />
+                    </Grid>
                 </Grid>
-            </Grid>
+            </div>
             <div>
                 <div>
                     <Suspense fallback={<div className="loader"></div>}>
