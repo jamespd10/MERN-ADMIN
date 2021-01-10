@@ -1,17 +1,3 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-@font-face {
-    font-family: 'Quattrocento Sans';
-    src: url(assets/letras/QuattrocentoSans-Regular.ttf);
-  }
-  
-body{
-    font-family: 'Quattrocento Sans', sans-serif;
-}
-
 .loader {
     position: absolute;
     top: calc(50% - 4em);
