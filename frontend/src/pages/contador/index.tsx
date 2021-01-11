@@ -1,35 +1,81 @@
 import React, { useState, useEffect, } from 'react';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
+import IconButton from '@material-ui/core/IconButton';
+import AddIcon from '@material-ui/icons/Add';
+import MinimizeIcon from '@material-ui/icons/Minimize';
+import RestoreIcon from '@material-ui/icons//Restore';
+import Typography from '@material-ui/core/Typography';
+
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            '& > *': {
+                margin: theme.spacing(1),
+            },
+        },
+        button: {
+            margin: theme.spacing(1),
+        },
+        textCenter: {
+            textAlign: 'center'
+        },
+        alignIconRight: {
+            marginLeft: 'auto'
+        }
+    }),
+);
 
 const Contador: React.FC = (props: any) => {
+    const classes = useStyles();
     const [count, setCount] = useState(0);
     useEffect(() => {
         document.title = props.title;
     });
     return (
-        <div className="container my-4">
+        <Container maxWidth="md">
             <h1>{props.title}</h1>
-            <div className="row justify-content-center">
-                <div className="col-md-5">
-                    <div className="card">
-                        <div className="card-header text-center text-light bg-dark"><h5>Sobre nosotros</h5></div>
-                        <div className="card-body text-center bg-danger display-6 text-light">
-                            <p>Danger count: <br /> {count}</p>
-                        </div>
-                        <div className="card-footer text-center text-light bg-dark">
-                            <button className="btn btn-primary mx-2" onClick={() => setCount(count + 1)}>
-                                Aumentar
-                            </button>
-                            <button className="btn btn-danger mx-2" onClick={() => setCount(count - 1)}>
-                                Disminuir
-                            </button>
-                            <button className="btn btn-secondary mx-2" onClick={() => setCount(0)}>
-                                Reiniciar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+            <Box width={1} display="flex" alignItems="center" justifyContent="center">
+                <Card>
+                    <CardHeader title="CONTADOR" className={classes.textCenter} />
+                    <CardContent>
+                        <Typography variant="h3" gutterBottom>
+                            <p className={classes.textCenter}>Count: <br /> {count}</p>
+                        </Typography>
+                    </CardContent>
+                    <CardActions disableSpacing>
+                        <IconButton 
+                            aria-label="add count" 
+                            color="primary" 
+                            onClick={() => 
+                            setCount(count + 1)}
+                        >
+                            <AddIcon />
+                        </IconButton>
+                        <IconButton 
+                            className={classes.alignIconRight} 
+                            color="secondary" 
+                            aria-label="minimizeIcon count" 
+                            onClick={() => setCount(count - 1)}
+                        >
+                            <MinimizeIcon />
+                        </IconButton>
+                        <IconButton 
+                            className={classes.alignIconRight} 
+                            aria-label="reset count" 
+                            onClick={() => setCount(0)}
+                        >
+                            <RestoreIcon />
+                        </IconButton>
+                    </CardActions>
+                </Card>
+            </Box>
+        </Container>
     );
 }
 

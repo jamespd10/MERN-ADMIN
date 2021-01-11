@@ -1,7 +1,16 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
 import api from '../../api';
-import ErrorAlert from '../../messages/error';
+import { ErrorAlert, SuccessAlert } from '../../messages/';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 type Inputs = {
     nombre: string,
@@ -13,12 +22,25 @@ type Inputs = {
     telefono: string,
 };
 
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            '& > *': {
+                margin: theme.spacing(1),
+            },
+        },
+        button: {
+            margin: theme.spacing(1),
+        },
+    }),
+);
+
 const SignUP: React.FC = (props: any) => {
+    const classes = useStyles();
     useEffect(() => {
         document.title = props.title;
     });
     const [isSubmit, setSubmit] = useState(false);
-    const [isErrorMessage, setErrorMessage] = useState('');
     const { register, handleSubmit, errors, getValues } = useForm<Inputs>({ mode: 'all' });
     const onSubmit = async (data: Inputs/*, e:any*/) => {
         //e.target.reset();
@@ -32,180 +54,202 @@ const SignUP: React.FC = (props: any) => {
             password: data.password,
         })
             .then(function (response) {
-                console.log(response);
-                setErrorMessage('');
+                setSubmit(false);
+                SuccessAlert("Registro satisfactorio!");
             })
             .catch(function (error) {
-                if (error.response.data.message)
-                    setErrorMessage(error.response.data.message);
+                setSubmit(false);
+                if (error.response)
+                    ErrorAlert(error.response.data.message);
                 else
-                    setErrorMessage("Ocurrió un error inesperado");
+                    ErrorAlert("Ocurrió un error inesperado");
             });
-        setSubmit(false);
     }
     return (
         <Fragment>
             {
                 isSubmit ? <div className="loader-page"></div> :
-                    <div className="container my-4">
-                        {isErrorMessage ? <ErrorAlert message={isErrorMessage} {...props} /> : ''}
+                    <Container maxWidth="md">
                         <h1>{props.title}</h1>
-                        <div className="row justify-content-center">
-                            <div className="col-sm col-md-6 col-lg-6 col-lg-6">
-                                <div className="card">
-                                    <div className="card-header text-center"><h5>FORMULARIO DE REGISTRO</h5></div>
-                                    <div className="card-body">
-                                        <form method="post" onSubmit={handleSubmit(onSubmit)}>
-                                            <div className="row">
-                                                <div className="col">
-                                                    <div className="form-group mb-2">
-                                                        <label htmlFor="nombre">Nombre</label>
-                                                        <input
-                                                            className={errors.nombre ? 'form-control is-invalid' : 'form-control'}
-                                                            type="text" name="nombre" id="nombre" placeholder="Nombre"
-                                                            ref={register({
-                                                                required: 'el nombre es requerido',
-                                                                minLength: {
-                                                                    value: 3,
-                                                                    message: 'el nombre debe tener minimo de 3 caracteres'
-                                                                },
-                                                                maxLength: {
-                                                                    value: 20,
-                                                                    message: 'el apellido debe tener maximo de 20 caracteres'
-                                                                },
-                                                                pattern: {
-                                                                    value: /^[A-Za-z]+$/i,
-                                                                    message: 'el nombre debe contener solo letras'
-                                                                }
-                                                            })}
-                                                        />
-                                                        {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
-                                                    </div>
-                                                </div>
-                                                <div className="col-lg">
-                                                    <div className="form-group my-md-2 my-lg-0">
-                                                        <label htmlFor="apellido">Apellido</label>
-                                                        <input
-                                                            className={errors.apellido ? 'form-control is-invalid' : 'form-control'}
-                                                            type="text" name="apellido" id="apellido" placeholder="Apellido"
-                                                            ref={register({
-                                                                required: 'el apellido es requerido',
-                                                                minLength: {
-                                                                    value: 3,
-                                                                    message: 'el apellido debe tener minimo de 3 caracteres'
-                                                                },
-                                                                maxLength: {
-                                                                    value: 20,
-                                                                    message: 'el apellido debe tener maximo de 20 caracteres'
-                                                                },
-                                                                pattern: {
-                                                                    value: /^[A-Za-z]+$/i,
-                                                                    message: 'el apellido debe contener solo letras'
-                                                                }
-                                                            })}
-                                                        />
-                                                        {errors.apellido && <div className="invalid-feedback">{errors.apellido.message}</div>}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="form-group my-2">
-                                                <label htmlFor="usuario">Usuario</label>
-                                                <input
-                                                    className={errors.usuario ? 'form-control is-invalid' : 'form-control'}
-                                                    type="text" name="usuario" id="usuario" placeholder="Usuario"
-                                                    ref={register({
-                                                        required: 'el usuario es requerido',
-                                                        minLength: {
-                                                            value: 3,
-                                                            message: 'el usuario debe tener minimo de 3 caracteres'
-                                                        },
-                                                        maxLength: {
-                                                            value: 20,
-                                                            message: 'el usuario debe tener maximo de 20 caracteres'
-                                                        },
-                                                        pattern: {
-                                                            value: /^[A-Za-z0-9]+$/i,
-                                                            message: 'el usuario debe contener solo números y letras'
-                                                        }
-                                                    })}
-                                                />
-                                                {errors.usuario && <div className="invalid-feedback">{errors.usuario.message}</div>}
-                                            </div>
-                                            <div className="form-group my-2">
-                                                <label htmlFor="email">Email</label>
-                                                <input
-                                                    className={errors.email ? 'form-control is-invalid' : 'form-control'}
-                                                    type="text" name="email" id="email" placeholder="Email"
-                                                    ref={register({
-                                                        required: 'el correo es requerido',
-                                                        minLength: {
-                                                            value: 3,
-                                                            message: 'el correo debe tener minimo de 3 caracteres'
-                                                        },
-                                                        maxLength: {
-                                                            value: 20,
-                                                            message: 'el correo debe tener maximo de 20 caracteres'
-                                                        },
-                                                        pattern: {
-                                                            value: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-                                                            message: 'el correo debe ser un correo válido'
-                                                        }
-                                                    })}
-                                                />
-                                                {errors.email && <div className="invalid-feedback">{errors.email.message}</div>}
-                                            </div>
-                                            <div className="form-group my-2">
-                                                <label htmlFor="password">Contraseña</label>
-                                                <input
-                                                    className={errors.password ? 'form-control is-invalid' : 'form-control'}
-                                                    type="password" name="password" id="password" placeholder="Contraseña"
-                                                    ref={register({
-                                                        required: 'la contraseña es requerida',
-                                                        minLength: {
-                                                            value: 8,
-                                                            message: 'la contraseña debe tener minimo de 8 caracteres'
-                                                        },
-                                                        maxLength: {
-                                                            value: 16,
-                                                            message: 'la contraseña debe tener maximo de 16 caracteres'
-                                                        },
-                                                        pattern: {
-                                                            value: /^[A-Za-z0-9]+$/i,
-                                                            message: 'la contraseña debe contener solo números y letras'
-                                                        }
-                                                    })}
-                                                />
-                                                {errors.password && <div className="invalid-feedback">{errors.password.message}</div>}
-                                            </div>
-                                            <div className="form-group">
-                                                <label htmlFor="passwordRepeat">Repetir Contraseña</label>
-                                                <input
-                                                    className={errors.passwordRepeat ? 'form-control is-invalid' : 'form-control'}
-                                                    type="password" name="passwordRepeat" id="passwordRepeat" placeholder="Repetir Contraseña"
-                                                    ref={register({
-                                                        required: 'la contraseña es requerida',
-                                                        minLength: {
-                                                            value: 8,
-                                                            message: 'la contraseña debe tener minimo de 8 caracteres'
-                                                        },
-                                                        maxLength: {
-                                                            value: 16,
-                                                            message: 'la contraseña debe tener maximo de 16 caracteres'
-                                                        },
-                                                        validate: value => value === getValues('password') || 'la contraseña con coincide'
-                                                    })}
-                                                />
-                                                {errors.passwordRepeat && <div className="invalid-feedback">{errors.passwordRepeat.message}</div>}
-                                            </div>
-                                            <div className="d-grid gap-2 col-6 mx-auto mt-2">
-                                                <button className="btn btn-primary" type="submit">REGISTRAR</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        <Box width={1} display="flex" alignItems="center" justifyContent="center">
+                            <Card>
+                                <CardHeader title="FORMULARIO DE REGISTRO" style={{ textAlign: 'center' }} />
+                                <CardContent>
+                                    <form method="post" onSubmit={handleSubmit(onSubmit)} className={classes.root}>
+                                        <div>
+                                            <TextField
+                                                label="Nombre"
+                                                variant="outlined"
+                                                type="text"
+                                                name="nombre"
+                                                id="nombre"
+                                                inputRef={register({
+                                                    required: 'el nombre es requerido',
+                                                    minLength: {
+                                                        value: 3,
+                                                        message: 'el nombre debe tener minimo de 3 caracteres'
+                                                    },
+                                                    maxLength: {
+                                                        value: 20,
+                                                        message: 'el apellido debe tener maximo de 20 caracteres'
+                                                    },
+                                                    pattern: {
+                                                        value: /^[A-Za-z]+$/i,
+                                                        message: 'el nombre debe contener solo letras'
+                                                    }
+                                                })}
+                                                error={errors.nombre ? true : false}
+                                                helperText={errors.nombre ? errors.nombre.message : null}
+                                                fullWidth
+                                            />
+                                        </div>
+                                        <div>
+                                            <TextField
+                                                label="Apellido"
+                                                variant="outlined"
+                                                type="text"
+                                                name="apellido"
+                                                id="apellido"
+                                                inputRef={register({
+                                                    required: 'el apellido es requerido',
+                                                    minLength: {
+                                                        value: 3,
+                                                        message: 'el apellido debe tener minimo de 3 caracteres'
+                                                    },
+                                                    maxLength: {
+                                                        value: 20,
+                                                        message: 'el apellido debe tener maximo de 20 caracteres'
+                                                    },
+                                                    pattern: {
+                                                        value: /^[A-Za-z]+$/i,
+                                                        message: 'el apellido debe contener solo letras'
+                                                    }
+                                                })}
+                                                error={errors.apellido ? true : false}
+                                                helperText={errors.apellido ? errors.apellido.message : null}
+                                                fullWidth
+                                            />
+                                        </div>
+                                        <div>
+                                            <TextField
+                                                label="Usuario"
+                                                variant="outlined"
+                                                type="text"
+                                                name="usuario"
+                                                id="usuario"
+                                                inputRef={register({
+                                                    required: 'el usuario es requerido',
+                                                    minLength: {
+                                                        value: 3,
+                                                        message: 'el usuario debe tener minimo de 3 caracteres'
+                                                    },
+                                                    maxLength: {
+                                                        value: 20,
+                                                        message: 'el usuario debe tener maximo de 20 caracteres'
+                                                    },
+                                                    pattern: {
+                                                        value: /^[A-Za-z0-9]+$/i,
+                                                        message: 'el usuario debe contener solo números y letras'
+                                                    }
+                                                })}
+                                                error={errors.usuario ? true : false}
+                                                helperText={errors.usuario ? errors.usuario.message : null}
+                                                fullWidth
+                                            />
+                                        </div>
+                                        <div>
+                                            <TextField
+                                                label="Email"
+                                                variant="outlined"
+                                                type="email"
+                                                name="email"
+                                                id="email"
+                                                inputRef={register({
+                                                    required: 'el correo es requerido',
+                                                    minLength: {
+                                                        value: 3,
+                                                        message: 'el email debe tener minimo de 3 caracteres'
+                                                    },
+                                                    maxLength: {
+                                                        value: 20,
+                                                        message: 'el email debe tener maximo de 20 caracteres'
+                                                    },
+                                                    pattern: {
+                                                        value: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+                                                        message: 'el email debe ser un email válido'
+                                                    }
+                                                })}
+                                                error={errors.email ? true : false}
+                                                helperText={errors.email ? errors.email.message : null}
+                                                fullWidth
+                                            />
+                                        </div>
+                                        <div>
+                                            <TextField
+                                                label="Contraseña"
+                                                variant="outlined"
+                                                type="password"
+                                                name="password"
+                                                id="password"
+                                                inputRef={register({
+                                                    required: 'la contraseña es requerida',
+                                                    minLength: {
+                                                        value: 8,
+                                                        message: 'la contraseña debe tener minimo de 8 caracteres'
+                                                    },
+                                                    maxLength: {
+                                                        value: 16,
+                                                        message: 'la contraseña debe tener maximo de 16 caracteres'
+                                                    },
+                                                    pattern: {
+                                                        value: /^[A-Za-z0-9]+$/i,
+                                                        message: 'la contraseña debe contener solo números y letras'
+                                                    }
+                                                })}
+                                                error={errors.password ? true : false}
+                                                helperText={errors.password ? errors.password.message : null}
+                                                fullWidth
+                                            />
+                                        </div>
+                                        <div>
+                                            <TextField
+                                                label="Contraseña"
+                                                variant="outlined"
+                                                type="password"
+                                                name="passwordRepeat"
+                                                id="passwordRepeat"
+                                                inputRef={register({
+                                                    required: 'la contraseña es requerida',
+                                                    minLength: {
+                                                        value: 8,
+                                                        message: 'la contraseña debe tener minimo de 8 caracteres'
+                                                    },
+                                                    maxLength: {
+                                                        value: 16,
+                                                        message: 'la contraseña debe tener maximo de 16 caracteres'
+                                                    },
+                                                    validate: value => value === getValues('password') || 'la contraseña con coincide'
+                                                })}
+                                                error={errors.passwordRepeat ? true : false}
+                                                helperText={errors.passwordRepeat ? errors.passwordRepeat.message : null}
+                                                fullWidth
+                                            />
+                                        </div>
+                                        <Box width={1} display="flex" alignItems="center" justifyContent="center">
+                                            <Button
+                                                variant="outlined"
+                                                color="primary"
+                                                type="submit"
+                                                endIcon={<DeleteIcon />}
+                                            >
+                                                REGISTRAR
+                                            </Button>
+                                        </Box>
+                                    </form>
+                                </CardContent>
+                            </Card>
+                        </Box>
+                    </Container>
             }
         </Fragment>
     );

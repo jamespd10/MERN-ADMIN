@@ -1,15 +1,38 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 type Inputs = {
     usuario: string,
     password: any,
 };
 
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            '& > *': {
+                margin: theme.spacing(1),
+            },
+        },
+        button: {
+            margin: theme.spacing(1),
+        },
+    }),
+);
+
 const SignIN: React.FC = (props: any) => {
     useEffect(() => {
         document.title = props.title;
     });
+    const classes = useStyles();
     const { register, handleSubmit, errors, watch } = useForm<Inputs>({ mode: 'all' });
     const watchUsuario = watch("usuario");
     const watchPassword = watch("password");
@@ -23,47 +46,60 @@ const SignIN: React.FC = (props: any) => {
         <Fragment>
             {
                 isSubmit ? <div className="loader-page"></div> :
-                    <div className="container my-4">
+                    <Container maxWidth="md">
                         <h1>{props.title}</h1>
-                        <div className="row justify-content-center">
-                            <div className="col-md-5">
-                                <div className="card">
-                                    <div className="card-header text-center"><h5>FORMULARIO DE INGRESO</h5></div>
-                                    <div className="card-body">
-                                        <form method="post" onSubmit={handleSubmit(onSubmit)}>
-                                            <div className="form-group">
-                                                <label htmlFor="usuario">Usuario</label>
-                                                <input
-                                                    className={errors.usuario ? 'form-control is-invalid' : 'form-control'}
-                                                    type="text" name="usuario" id="usuario" placeholder="Usuario"
-                                                    ref={register({
-                                                        required: "el usuario es requerido",
-                                                    })}
-                                                />
-                                                {watchUsuario}
-                                                {errors.usuario && <div className="invalid-feedback">{errors.usuario.message}</div>}
-                                            </div>
-                                            <div className="form-group my-2">
-                                                <label htmlFor="password">Contraseña</label>
-                                                <input
-                                                    className={errors.password ? 'form-control is-invalid' : 'form-control'}
-                                                    type="password" name="password" id="password" placeholder="Contraseña"
-                                                    ref={register({
-                                                        required: "la contraseña es requerida",
-                                                    })}
-                                                />
-                                                {watchPassword}
-                                                {errors.password && <div className="invalid-feedback">{errors.password.message}</div>}
-                                            </div>
-                                            <div className="d-grid gap-2 col-6 mx-auto">
-                                                <button className="btn btn-primary" type="submit">INGRESAR</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        <Box width={1} display="flex" alignItems="center" justifyContent="center">
+                            <Card>
+                                <CardHeader title="FORMULARIO DE INGRESO" style={{ textAlign: 'center' }} />
+                                <CardContent>
+                                    <form onSubmit={handleSubmit(onSubmit)} className={classes.root}>
+                                        <div>
+                                            <TextField
+                                                label="Usuario"
+                                                variant="outlined"
+                                                type="text"
+                                                name="usuario"
+                                                id="usuario"
+                                                inputRef={register({
+                                                    required: "el usuario es requerido",
+                                                })}
+                                                error={errors.usuario ? true : false}
+                                                helperText={errors.usuario ? errors.usuario.message : null}
+                                                fullWidth
+                                            />
+                                            {watchUsuario}
+                                        </div>
+                                        <div>
+                                            <TextField
+                                                label="Contraseña"
+                                                variant="outlined"
+                                                type="text"
+                                                name="password"
+                                                id="password"
+                                                inputRef={register({
+                                                    required: "la contraseña es requerida",
+                                                })}
+                                                error={errors.password ? true : false}
+                                                helperText={errors.password ? errors.password.message : null}
+                                                fullWidth
+                                            />
+                                            {watchPassword}
+                                        </div>
+                                        <Box width={1} display="flex" alignItems="center" justifyContent="center">
+                                            <Button
+                                                variant="outlined"
+                                                color="primary"
+                                                type="submit"
+                                                endIcon={<DeleteIcon />}
+                                            >
+                                                INGRESAR
+                                            </Button>
+                                        </Box>
+                                    </form>
+                                </CardContent>
+                            </Card>
+                        </Box>
+                    </Container>
             }
         </Fragment >
     );
