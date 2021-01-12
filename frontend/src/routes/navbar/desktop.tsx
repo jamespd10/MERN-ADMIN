@@ -27,7 +27,7 @@ const Desktop:React.FC = ()=>{
             <AppBar position="static">
                 <Toolbar>
                     <Typography variant="h6" className={classes.title}>
-                        Photos
+                        React App
                     </Typography>
                     <div>
                         <Button component={Link} to="/" color="inherit">

@@ -11,8 +11,8 @@ function App() {
   return (
     <loginUser.Provider value={false}>
       <CssBaseline />
-      {/*render ? <div className="loader-page"></div> : <Routes />*/}
-      <Suspense fallback={<div className="loader"></div>}>
+      {/*render ? <div className="loader"></div> : <Routes />*/}
+      <Suspense fallback={<div className="loader-page"></div>}>
         <Routes />
       </Suspense>
     </loginUser.Provider>

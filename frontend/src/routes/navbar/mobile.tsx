@@ -4,13 +4,14 @@ import { Link } from 'react-router-dom';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 //Componens
 import Drawer from '@material-ui/core/Drawer';
-import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
+import HomeIcon from '@material-ui/icons/Home';
+import ContadorIcon from '@material-ui/icons/ExposurePlus1Outlined';
+import LoginIcon from '@material-ui/icons/AccountBox';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -63,9 +64,8 @@ const Mobile: React.FC = () => {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>
-                        News
-                            </Typography>
-                    <Button color="inherit">Login</Button>
+                        React App
+                    </Typography>
                 </Toolbar>
             </AppBar>
             <Drawer anchor="left" open={isOpen} onClose={toggleDrawer(false)}>
@@ -83,19 +83,19 @@ const Mobile: React.FC = () => {
                     <Divider />
                     <List>
                         <ListItem button component={Link} to="/">
-                            <ListItemIcon><InboxIcon /></ListItemIcon>
+                            <ListItemIcon><HomeIcon /></ListItemIcon>
                             <ListItemText primary="Home" />
                         </ListItem>
                         <ListItem button component={Link} to="/contador">
-                            <ListItemIcon><InboxIcon /></ListItemIcon>
+                            <ListItemIcon><ContadorIcon /></ListItemIcon>
                             <ListItemText primary="Contador" />
                         </ListItem>
                         <ListItem button component={Link} to="/signin">
-                            <ListItemIcon><InboxIcon /></ListItemIcon>
+                            <ListItemIcon><LoginIcon /></ListItemIcon>
                             <ListItemText primary="Ingresar" />
                         </ListItem>
                         <ListItem button component={Link} to="/signup">
-                            <ListItemIcon><InboxIcon /></ListItemIcon>
+                            <ListItemIcon><LoginIcon /></ListItemIcon>
                             <ListItemText primary="Registrar" />
                         </ListItem>
                     </List>

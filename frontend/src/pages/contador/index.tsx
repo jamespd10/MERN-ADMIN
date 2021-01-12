@@ -27,7 +27,13 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         alignIconRight: {
             marginLeft: 'auto'
-        }
+        },
+        cardWidth: {
+            width: '100%'
+        },
+        marginContainer: {
+            marginBottom: 20
+        },
     }),
 );
 
@@ -38,10 +44,10 @@ const Contador: React.FC = (props: any) => {
         document.title = props.title;
     });
     return (
-        <Container maxWidth="md">
+        <Container maxWidth="md" className={classes.marginContainer}>
             <h1>{props.title}</h1>
             <Box width={1} display="flex" alignItems="center" justifyContent="center">
-                <Card>
+                <Card className={classes.cardWidth}>
                     <CardHeader title="CONTADOR" className={classes.textCenter} />
                     <CardContent>
                         <Typography variant="h3" gutterBottom>
