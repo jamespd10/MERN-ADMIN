@@ -10,6 +10,8 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import SendIcon from '@material-ui/icons/Send';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { ErrorAlert, SuccessAlert } from '../../messages/';
+import api from '../../api';
 
 type Inputs = {
     usuario: string,
@@ -40,11 +42,24 @@ const SignIN: React.FC = (props: any) => {
     const { register, handleSubmit, errors, watch, reset } = useForm<Inputs>({ mode: 'all' });
     const watchUsuario = watch("usuario");
     const watchPassword = watch("password");
-    const onSubmit = (data: React.FormEvent<HTMLFormElement>) => {
-        console.log(data);
+    const onSubmit = async (data: Inputs) => {
         setSubmit(true);
         reset();
-        setTimeout(function () { setSubmit(false); }, 3000);
+        await api.post('/usuarios/signin', {
+            usuario: data.usuario,
+            password: data.password,
+        })
+            .then(function (response) {
+                setSubmit(false);
+                SuccessAlert("Inicio satisfactorio!");
+            })
+            .catch(function (error) {
+                setSubmit(false);
+                if (error.response)
+                    ErrorAlert(error.response.data.message);
+                else
+                    ErrorAlert("Ocurrió un error inesperado");
+            });
     }
     const [isSubmit, setSubmit] = useState(false);
     return (

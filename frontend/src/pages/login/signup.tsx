@@ -1,7 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
-import api from '../../api';
-import { ErrorAlert, SuccessAlert } from '../../messages/';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -12,6 +10,8 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import SendIcon from '@material-ui/icons/Send';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { ErrorAlert, SuccessAlert } from '../../messages/';
+import api from '../../api';
 
 type Inputs = {
     nombre: string,
