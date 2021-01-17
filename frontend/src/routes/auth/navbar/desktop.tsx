@@ -39,6 +39,9 @@ const Desktop:React.FC = ()=>{
                         <Button component={Link} to="/admin" color="inherit">
                             Admin
                         </Button>
+                        <Button component={Link} to="/signout" color="inherit">
+                            Salir
+                        </Button>
                     </div>
                 </Toolbar>
             </AppBar>

@@ -1,25 +1,14 @@
-import React, { Fragment } from 'react';
-import { CACHE_KEYS } from '../constants';
-import useSWR from 'swr';
-import api from '../api';
+import React, { Fragment, useContext } from 'react';
 import Auth from './auth';
 import UnAuth from './unauth';
-
-async function fetchUser() {
-    try {
-        const response = await api.get('/usuarios/yo');
-        return response.data;
-    } catch (error) {
-        return null;
-    }
-}
+import { UserContext } from '../constants';
 
 const Routes: React.FC = () => {
-    const { data: user } = useSWR(CACHE_KEYS.user, fetchUser);
+    const userData = useContext(UserContext);
     return (
         <Fragment>
             {
-                user ? <Auth user={user} {...user} /> : <UnAuth />
+                Object.keys(userData.userData).length > 0 ? <Auth /> : <UnAuth />
             }
         </Fragment>
     );

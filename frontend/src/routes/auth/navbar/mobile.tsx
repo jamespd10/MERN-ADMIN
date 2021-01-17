@@ -94,6 +94,10 @@ const Mobile: React.FC = () => {
                             <ListItemIcon><LoginIcon /></ListItemIcon>
                             <ListItemText primary="Admin" />
                         </ListItem>
+                        <ListItem button component={Link} to="/signout">
+                            <ListItemIcon><LoginIcon /></ListItemIcon>
+                            <ListItemText primary="Salir" />
+                        </ListItem>
                     </List>
                 </div>
             </Drawer>

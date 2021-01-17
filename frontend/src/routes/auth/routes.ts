@@ -1,4 +1,4 @@
-import { Contador, Home, Admin, SignIn, SignUp } from '../../pages';
+import { Contador, Home, Admin } from '../../pages';
 const routes = [
     {
         path: "/",

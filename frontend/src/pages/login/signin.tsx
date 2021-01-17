@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment, useContext } from 'react';
 import { useForm } from "react-hook-form";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -12,10 +12,11 @@ import SendIcon from '@material-ui/icons/Send';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { ErrorAlert, SuccessAlert } from '../../messages/';
 import api from '../../api';
+import { UserContext } from '../../constants';
 
 type Inputs = {
     usuario: string,
-    password: any,
+    password: string,
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -38,6 +39,8 @@ const SignIN: React.FC = (props: any) => {
     useEffect(() => {
         document.title = props.title;
     });
+    const userData = useContext(UserContext);
+    const [isSubmit, setSubmit] = useState(false);
     const classes = useStyles();
     const { register, handleSubmit, errors, watch, reset } = useForm<Inputs>({ mode: 'all' });
     const watchUsuario = watch("usuario");
@@ -51,6 +54,7 @@ const SignIN: React.FC = (props: any) => {
         })
             .then(function (response) {
                 setSubmit(false);
+                userData.setUserData(response.data);
                 SuccessAlert("Inicio satisfactorio!");
             })
             .catch(function (error) {
@@ -61,7 +65,6 @@ const SignIN: React.FC = (props: any) => {
                     ErrorAlert("Ocurrió un error inesperado");
             });
     }
-    const [isSubmit, setSubmit] = useState(false);
     return (
         <Fragment>
             <Container maxWidth="md" className={classes.marginContainer}>
@@ -119,7 +122,7 @@ const SignIN: React.FC = (props: any) => {
                     </Card>
                 </Box>
             </Container>
-        </Fragment >
+        </Fragment>
     );
 }
 

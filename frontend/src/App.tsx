@@ -1,21 +1,36 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import './App.css';
-//import Routes from './routes/';
-import 'line-awesome/dist/line-awesome/css/line-awesome.css';
+import { UserContext } from './constants';
+import api from './api';
 import CssBaseline from '@material-ui/core/CssBaseline';
 const Routes = React.lazy(() => import('./routes'));
 
-const loginUser = React.createContext(false);
-
 function App() {
+
+  useEffect(() => {
+    fetchUser();
+  });
+
+  const [userData, setUserData] = useState({});
+  const value = { userData, setUserData };
+
+  const fetchUser = async () => {
+    await api.get('/usuarios/validate-session')
+      .then(function (response) {
+        setUserData(response.data);
+      })
+      .catch(function (error) {
+        return null;
+      });
+  }
   return (
-    <loginUser.Provider value={false}>
+
+    <UserContext.Provider value={value}>
       <CssBaseline />
-      {/*render ? <div className="loader"></div> : <Routes />*/}
       <Suspense fallback={<div className="loader-page"></div>}>
         <Routes />
       </Suspense>
-    </loginUser.Provider>
+    </UserContext.Provider>
   );
 }
 

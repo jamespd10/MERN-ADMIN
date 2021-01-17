@@ -14,17 +14,9 @@ export default (prefix?: string) => {
     //INGRESAR
     router.route('/signin').post(UserController.handleSignIn);
     //RUTA DE PRUEBA
-    router.route('/hola').get(
-        UserController.handleHola
-    );
+    router.route('/validate-session').get(UserController.handleValidateSession);
     //PARA CERRAR SESSION
-    router.route('/salir').post(UserController.authenticate, UserController.handleSignOut)
-    //PARA RECUPERAR LA SESION
-    router.route('/yo').get(UserController.authenticate, UserController.handleGetMe)
-    //PARA REFRSCAR EL TOKEN
-    router.route('/refresh-auth').patch(
-        UserController.authenticate,
-        UserController.handleRefreshAuthentication
-    )
+    router.route('/salir').post(UserController.handleSignOut);
+
     return prefix ? prefixedRouter.use(prefix, router) : router;
 }
