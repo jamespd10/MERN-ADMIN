@@ -33,9 +33,6 @@ const Desktop:React.FC = ()=>{
                         <Button component={Link} to="/" color="inherit">
                             Home
                         </Button>
-                        <Button component={Link} to="/contador" color="inherit">
-                            Contador
-                        </Button>
                         <Button component={Link} to="/signin" color="inherit">
                             Ingresar
                         </Button>

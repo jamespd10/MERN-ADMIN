@@ -4,14 +4,28 @@ import { emailExpresionRegular } from '../../../constants/';
 import bcryptjs from 'bcryptjs';
 import { AppError } from '../../../lib';
 
+//
+const userCodeSchema = {
+	value: String,
+	expiration: Date,
+}
+//
+export interface IUserCode {
+	value: string
+	expiration: Date
+}
 //define los datos que tendrá el objeto schema del usuario
 export interface IUsuario {
     id: string
     nombre: string
-    apellido: string,
+    apellido: string
     usuario: string
     email: string
     password: string
+    isEmailVerified: boolean
+	refreshToken?: string
+	emailVerificationCode?: IUserCode
+	passwordResetCode?: IUserCode
     timestamps: {
         createdAt: Date
         updatedAt: Date
@@ -56,7 +70,18 @@ const schemaDefinition: MongooseSchemaDefinition<IUsuario> = {
         minlength: 8,
         maxlength: 16,
         trim: true,
-    }
+    },
+    isEmailVerified: {
+		type: Boolean,
+		default: false,
+	},
+	emailVerificationCode: {
+		type: userCodeSchema,
+	},
+	passwordResetCode: {
+		type: userCodeSchema,
+	},
+	refreshToken: String,
 }
 //se define el esquema dado el anterior y se transforma 
 //de modo que devuelva solo los datos que se quieren mostrar
@@ -67,6 +92,9 @@ const userSchema = new Schema(schemaDefinition, {
         transform: (_: IUserDocument, obj: IUsuario) => ({
             ...obj,
             password: undefined,
+            refreshToken: undefined,
+			emailVerificationCode: undefined,
+			passwordResetCode: undefined,
             _id: undefined,
             __v: undefined,
         }),

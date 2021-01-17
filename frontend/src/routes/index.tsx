@@ -1,39 +1,27 @@
-import React from 'react';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-} from "react-router-dom";
-import Navbar from './navbar';
-import { routes } from './routes';
+import React, { Fragment } from 'react';
+import { CACHE_KEYS } from '../constants';
+import useSWR from 'swr';
+import api from '../api';
+import Auth from './auth';
+import UnAuth from './unauth';
+
+async function fetchUser() {
+    try {
+        const response = await api.get('/usuarios/yo');
+        return response.data;
+    } catch (error) {
+        return null;
+    }
+}
 
 const Routes: React.FC = () => {
-    //let auth = useContext(authContext);
+    const { data: user } = useSWR(CACHE_KEYS.user, fetchUser);
     return (
-        <Router>
-            <Navbar />
-            <Switch>
-                {routes.map((route, index) => (
-                    route.private ?
-                        <Route
-                            key={index}
-                            path={route.path}
-                            exact={route.exact}
-                            render={(props: any) => (
-                                <route.component title={route.name} {...props} />
-                            )}
-                        /> :
-                        <Route
-                            key={index}
-                            path={route.path}
-                            exact={route.exact}
-                            render={(props: any) => (
-                                <route.component title={route.name} {...props} />
-                            )}
-                        />
-                ))}
-            </Switch>
-        </Router>
+        <Fragment>
+            {
+                user ? <Auth user={user} {...user} /> : <UnAuth />
+            }
+        </Fragment>
     );
 }
 export default Routes;

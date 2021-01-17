@@ -52,6 +52,17 @@ export const handleSignIn = async (
         next(error);
     }
 }
+//PARA CERRAR SESSION
+export const handleSignOut = async (req: Request, res: Response) => {
+	await UserModel.findByIdAndUpdate(req.user?.id, { refreshToken: undefined })
+	return res
+		.clearCookie('jwt', {
+			httpOnly: true,
+			secure: false,
+		})
+		.clearCookie('refreshToken', { httpOnly: true, secure: false })
+		.end()
+}
 //RUTA DE PRUEBA
 export const handleHola = async (
     _: Request,
@@ -59,6 +70,89 @@ export const handleHola = async (
 ) => {
     //return res.status(req.user ? 200 : 401).json(req.user?.toObject())
     return res.send('Marca fren');
+}
+//No se para que es este :v
+export const handleGetMe = (req: Request, res: Response) => {
+	return res.status(req.user ? 200 : 401).json(req.user?.toObject())
+}
+//PARA VERIFICAR LA SESION
+export const authenticate = async (
+	req: Request,
+	_: Response,
+	next: NextFunction
+) => {
+	try {
+		const { jwt: jwtCookie } = req.cookies
+		if (!jwtCookie) {
+			return next(new AppError('No estás autenticado', 401))
+		}
+
+		const { user } = jwt.verify(jwtCookie, env.auth.jwtSecret, {
+			ignoreExpiration: ['/usuarios/refresh-auth'].includes(req.originalUrl),
+		}) as {
+			user: IUsuario
+			iat: number
+			exp: number
+		}
+
+		const userDocument = await UserModel.findById(user.id)
+		if (!userDocument) {
+			return next(new AppError('No estás autenticado', 401))
+		}
+
+		req.user = userDocument
+		next()
+	} catch (error) {
+		return next(new AppError(error.error || error.message, 401))
+	}
+}
+//REFESCAR EL TOKEN
+export const handleRefreshAuthentication = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		if (!req.cookies.refreshToken || !req.user || !req.user.refreshToken) {
+			return next(new AppError('No estás auntenticado', 401))
+		}
+
+		const isCodeValid = await bcryptjs.compare(
+			req.cookies.refreshToken,
+			req.user.refreshToken
+		)
+
+		if (!isCodeValid) {
+			return next(new AppError('No estás autenticado', 401))
+		}
+
+		const payload = jwt.verify(
+			req.cookies.refreshToken,
+			env.auth.jwtSecret
+		) as IRefreshTokenPayload
+
+		if (payload.ip !== req.ip) {
+			return res
+				.status(401)
+				.clearCookie('jwt', {
+					httpOnly: true,
+					secure: false,
+				})
+				.clearCookie('refreshToken', {
+					httpOnly: true,
+					secure: false,
+				})
+				.end()
+		}
+
+		const newAuthorizationToken = await generateJwt(req.user.toObject())
+		return res
+			.status(200)
+			.cookie('jwt', newAuthorizationToken, { httpOnly: true, secure: false })
+			.end()
+	} catch (error) {
+		return next(error)
+	}
 }
 //GENERAR AUTENTICACION
 export const generateAuthenticationResult = async (

@@ -1,16 +1,10 @@
-import { Contador, Home, SignIn, SignUp, Admin } from '../pages';
+import { Contador, Home, Admin, SignIn, SignUp } from '../../pages';
 const routes = [
     {
         path: "/",
         exact: true,
         component: Home,
         name: 'Home',
-        private: false,
-    },
-    {
-        path: "/contador",
-        component: Contador,
-        name: 'Contador',
         private: false,
     },
     {
@@ -24,12 +18,6 @@ const routes = [
         component: SignUp,
         name: 'Registrar',
         private: false,
-    },
-    {
-        path: "/admin",
-        component: Admin,
-        name: 'Administración',
-        private: true,
     },
 ];
 
